@@ -1,0 +1,38 @@
+# docker run -d \
+#   --restart=always \
+#   --name haproxy-certbot \
+#   --cap-add=NET_ADMIN \
+#   -p 80:80 \
+#   -p 443:443 \
+#   -v /docker/haproxy/config:/config \
+#   -v /docker/haproxy/letsencrypt:/etc/letsencrypt \
+#   -v /docker/haproxy/certs.d:/usr/local/etc/haproxy/certs.d \
+#   nmarus/haproxy-certbot
+#
+version: "3"
+
+services:
+  haproxy:
+    restart: unless-stopped
+    container_name: haproxy
+    image: haproxy-certbot:2.1.0-buster
+    hostname: haproxy
+    # entrypoint:
+    ulimits:
+      nproc: 16000
+      nofile: 16000
+    cap_add:
+      - NET_ADMIN
+    build:
+      # dockerfile: Dockerfile
+      dockerfile: Dockerfile
+      context: .
+    environment:
+      DUMMY: xxx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ${PWD}/volumes/haproxy/config.d:/config
+      - ${PWD}/volumes/haproxy/letsencrypt:/etc/letsencrypt
+      - ${PWD}/volumes/haproxy/certs.d:/usr/local/etc/haproxy/certs.d
