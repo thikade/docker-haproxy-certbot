@@ -1,0 +1,9 @@
+volumes/**
+!volumes/haproxy
+!volumes/haproxy/certs.d
+!volumes/haproxy/config.d
+!volumes/haproxy/letsencrypt
+
+!volumes/haproxy/certs.d/.keep
+!volumes/haproxy/config.d/.keep
+!volumes/haproxy/letsencrypt/.keep
