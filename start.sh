@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e
+set -ex
 
 HA_PROXY_DIR=/usr/local/etc/haproxy
 TEMP_DIR=/tmp
@@ -11,7 +11,7 @@ SUBJ="/C=US/ST=somewhere/L=someplace/O=haproxy/OU=haproxy/CN=haproxy.selfsigned.
 KEY=${TEMP_DIR}/haproxy_key.pem
 CERT=${TEMP_DIR}/haproxy_cert.pem
 CSR=${TEMP_DIR}/haproxy.csr
-DEFAULT_PEM=${HA_PROXY_DIR}/default.pem
+DEFAULT_PEM=${HA_PROXY_DIR}/certs.d/default.pem
 CONFIG=/config/haproxy.cfg
 
 # Check if config file for haproxy exists
@@ -19,6 +19,8 @@ if [ ! -e ${CONFIG} ]; then
   echo "${CONFIG} not found"
   exit 1
 fi
+
+test -f ${HA_PROXY_DIR}/certs.d/.keep &&  rm ${HA_PROXY_DIR}/certs.d/.keep
 
 # Check if default.pem has been created
 if [ ! -e ${DEFAULT_PEM} ]; then
