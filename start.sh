@@ -12,6 +12,7 @@ KEY=${TEMP_DIR}/haproxy_key.pem
 CERT=${TEMP_DIR}/haproxy_cert.pem
 CSR=${TEMP_DIR}/haproxy.csr
 DEFAULT_PEM=${HA_PROXY_DIR}/certs.d/default.pem
+DH_PARAMS=/tmp/dhparam.pem
 CONFIG=/config/haproxy.cfg
 
 # Check if config file for haproxy exists
@@ -20,7 +21,10 @@ if [ ! -e ${CONFIG} ]; then
   exit 1
 fi
 
-test -f ${HA_PROXY_DIR}/certs.d/.keep &&  rm ${HA_PROXY_DIR}/certs.d/.keep
+# Check if 2048 DH param file is here
+if [ ! -e ${DH_PARAMS} ]; then
+  curl https://ssl-config.mozilla.org/ffdhe2048.txt > ${DH_PARAMS}
+fi
 
 # Check if default.pem has been created
 if [ ! -e ${DEFAULT_PEM} ]; then
